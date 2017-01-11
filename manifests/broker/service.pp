@@ -17,7 +17,7 @@ class kafka::broker::service {
   $service_group = $::kafka::broker::service_group
 
   file { '/etc/init.d/kafka':
-    ensure  => present,
+    ensure  => file,
     mode    => '0755',
     content => template('kafka/init.erb')
   }
