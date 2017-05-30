@@ -19,7 +19,9 @@ class kafka::broker::install {
     install_dir   => $kafka::broker::install_dir,
     mirror_url    => $kafka::broker::mirror_url,
     install_java  => $kafka::broker::install_java,
-    package_dir   => $kafka::broker::package_dir
+    package_dir   => $kafka::broker::package_dir,
+    group_id      => $kafka::broker::group_id,
+    user_id       => $kafka::broker::user_id,
   }
 
 }

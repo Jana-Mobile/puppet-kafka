@@ -8,26 +8,42 @@
 # It manages the kafka-producer service
 #
 class kafka::producer::service(
-  $config = $kafka::params::producer_service_config
+  $input                      = $kafka::producer::input,
+  $service_config             = $kafka::producer::service_config,
+  $service_defaults           = $kafka::producer::service_defaults,
+  $service_requires_zookeeper = $kafka::producer::service_requires_zookeeper,
 ) {
 
   if $caller_module_name != $module_name {
     fail("Use of private class ${name} by ${caller_module_name}")
   }
 
-  $producer_service_config = deep_merge($config, $kafka::params::producer_service_config)
+  $producer_service_config = deep_merge($service_defaults, $service_config)
 
-  file { '/etc/init.d/kafka-producer':
-    ensure  => present,
-    mode    => '0755',
-    content => template('kafka/producer.init.erb')
+  if $producer_service_config['broker-list'] == '' {
+    fail('[Producer] You need to specify a value for broker-list')
+  }
+  if $producer_service_config['topic'] == '' {
+    fail('[Producer] You need to specify a value for topic')
   }
 
-  service { 'kafka-producer':
+  if $::service_provider == 'systemd' {
+    fail('Console Producer is not supported on systemd, because the stdin of the process cannot be redirected')
+  }
+
+  $service_name = 'kafka-producer'
+
+  file { "/etc/init.d/${service_name}":
+    ensure  => file,
+    mode    => '0755',
+    content => template('kafka/init.erb'),
+    before  => Service[$service_name],
+  }
+
+  service { $service_name:
     ensure     => running,
     enable     => true,
     hasstatus  => true,
     hasrestart => true,
-    require    => File['/etc/init.d/kafka-producer']
   }
 }
