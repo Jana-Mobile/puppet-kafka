@@ -83,4 +83,7 @@ class kafka::broker (
   -> class { '::kafka::broker::config': }
   -> class { '::kafka::broker::service': }
   -> Class['kafka::broker']
+
+  Class['::kafka::broker::install']
+  ~> Class['::kafka::broker::service']
 }
