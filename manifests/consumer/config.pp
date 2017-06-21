@@ -8,23 +8,27 @@
 # It manages the consumer config files
 #
 define kafka::consumer::config(
-  $config = {},
-  $service_restart = $kafka::consumer::service_restart
+  $config          = $kafka::consumer::config,
+  $config_defaults = $kafka::consumer::config_defaults,
+  $service_name    = 'kafka-consumer',
+  $service_restart = $kafka::consumer::service_restart,
+  $config_dir      = $kafka::consumer::config_dir,
 ) {
 
-  $consumer_config = deep_merge($kafka::params::consumer_config_defaults, $config)
+  $consumer_config = deep_merge($config_defaults, $config)
 
   $config_notify = $service_restart ? {
-    true  => Service['kafka'],
-    false => undef
+    true    => Service[$service_name],
+    default => undef
   }
 
-  file { "/opt/kafka/config/${name}.properties":
+  file { "${config_dir}/${name}.properties":
     ensure  => present,
-    mode    => '0755',
+    owner   => 'kafka',
+    group   => 'kafka',
+    mode    => '0644',
     content => template('kafka/consumer.properties.erb'),
-    require => File['/opt/kafka/config'],
-    notify  => $config_notify
+    notify  => $config_notify,
+    require => File[$config_dir],
   }
-
 }

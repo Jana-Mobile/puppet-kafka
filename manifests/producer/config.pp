@@ -8,23 +8,27 @@
 # It manages the producer config files
 #
 class kafka::producer::config(
-  $config = {},
-  $service_restart = $kafka::producer::service_restart
+  $config          = $kafka::producer::config,
+  $config_defaults = $kafka::producer::config_defaults,
+  $service_name    = 'kafka-producer',
+  $service_restart = $kafka::producer::service_restart,
+  $config_dir      = $kafka::producer::config_dir,
 ) {
 
-  $producer_config = deep_merge($kafka::params::producer_config_defaults, $config)
+  $producer_config = deep_merge($config_defaults, $config)
 
   $config_notify = $service_restart ? {
-    true  => Service['kafka'],
-    false => undef
+    true    => Service[$service_name],
+    default => undef
   }
 
-  file { '/opt/kafka/config/producer.properties':
+  file { "${config_dir}/producer.properties":
     ensure  => present,
-    mode    => '0755',
+    owner   => 'kafka',
+    group   => 'kafka',
+    mode    => '0644',
     content => template('kafka/producer.properties.erb'),
-    require => File['/opt/kafka/config'],
-    notify  => $config_notify
+    notify  => $config_notify,
+    require => File[$config_dir],
   }
-
 }
