@@ -14,6 +14,7 @@ class kafka::broker::service(
   $jmx_opts                   = $kafka::broker::jmx_opts,
   $log4j_opts                 = $kafka::broker::log4j_opts,
   $heap_opts                  = $kafka::broker::heap_opts,
+  $jvm_perf_opts              = $kafka::broker::jvm_perf_opts,
   $opts                       = $kafka::broker::opts,
   $config_dir                 = $kafka::broker::config_dir,
 ) {

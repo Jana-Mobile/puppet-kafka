@@ -47,6 +47,8 @@ class kafka::params {
   -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.port=9993'
   $consumer_log4j_opts = $broker_log4j_opts
 
+  $broker_jvm_perf_opts = '-server -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled \ -XX:+CMSScavengeBeforeRemark -XX:+DisableExplicitGC -Djava.awt.headless=true'
+
   $service_restart = true
 
   #http://kafka.apache.org/documentation.html#brokerconfigs

@@ -63,6 +63,7 @@ class kafka::broker (
   $service_requires_zookeeper = $kafka::params::service_requires_zookeeper,
   $jmx_opts                   = $kafka::params::broker_jmx_opts,
   $heap_opts                  = $kafka::params::broker_heap_opts,
+  $jvm_perf_opts              = $kafka::params::broker_jvm_perf_opts,
   $log4j_opts                 = $kafka::params::broker_log4j_opts,
   $opts                       = $kafka::params::broker_opts,
   $group_id                   = $kafka::params::group_id,
