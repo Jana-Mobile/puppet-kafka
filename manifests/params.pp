@@ -30,7 +30,8 @@ class kafka::params {
 
 
   $broker_jmx_opts = '-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false \
-  -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.port=9990'
+  -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.port=9990 \
+  -Dcom.sun.management.jmxremote.rmi.port=9990 -Djava.rmi.server.hostname=127.0.0.1'
   $broker_heap_opts = '-Xmx1G -Xms1G'
   $broker_log4j_opts = "-Dlog4j.configuration=file:${config_dir}/log4j.properties"
   $broker_opts = ''
